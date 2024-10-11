@@ -1,0 +1,379 @@
+SUMMARY of Mean Statistics Across All Patients
+==========================================================================================
+Mean MAE: 328.5300
+Mean MPE: 0.19%
+Mean RMSE: 488.8689
+Mean Pearson Correlation Coefficient: 0.9916
+
+Tissue Type                    Mean Relative Error (%)
+==========================================================================================
+Bone                           0.22%
+Muscle                         6.40%
+Total Adipose Tissue           -3.35%
+IntraMuscular Adipose Tissue   38.51%
+Subcutaneous Adipose Tissue    -12.59%
+Visceral Adipose Tissue        4.87%
+Perivascular Adipose Tissue    -13.69%
+Epicardial Adipose Tissue      1.37%
+==========================================================================================
+
+RESULTS AND STATISTICS for each patient of the testing set
+##########################################################################################
+Patient ID: 401413899 - Block: 3
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           1724.663617499968              1718.387281708575             
+Muscle                         4579.097384719919              4549.009322305156             
+Total Adipose Tissue           7313.006059987079              9029.708129331699             
+IntraMuscular Adipose Tissue   685.063131894886               465.5669221507082             
+Subcutaneous Adipose Tissue    3882.024414071021              5472.521901717023             
+Visceral Adipose Tissue        2745.918514021172              3091.619305463967             
+Perivascular Adipose Tissue    0.0                            0.0                           
+Epicardial Adipose Tissue      0.0                            0.0                           
+
+
+Patient ID: 401413899 - Block: 3 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 488.5951
+Mean Percentage Error (MPE): 0.18%
+Root Mean Squared Error (RMSE): 840.0432
+Pearson Correlation Coefficient: 0.9873
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           0.37%
+Muscle                         0.66%
+Total Adipose Tissue           -19.01%
+IntraMuscular Adipose Tissue   47.15%
+Subcutaneous Adipose Tissue    -29.06%
+Visceral Adipose Tissue        -11.18%
+Perivascular Adipose Tissue    0.00%
+Epicardial Adipose Tissue      0.00%
+
+
+
+##########################################################################################
+Patient ID: 401383507 - Block: 3
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           1917.296353871948              1856.080474619149             
+Muscle                         5757.860222732355              5967.798793764941             
+Total Adipose Tissue           16423.8447416033               19194.27175274448             
+IntraMuscular Adipose Tissue   2182.106951844949              1786.484444780853             
+Subcutaneous Adipose Tissue    9303.592947725992              11097.02349218648             
+Visceral Adipose Tissue        4938.144842032364              6310.763815777151             
+Perivascular Adipose Tissue    0.0                            0.0                           
+Epicardial Adipose Tissue      0.0                            0.0                           
+
+
+Patient ID: 401383507 - Block: 3 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 825.4067
+Mean Percentage Error (MPE): 0.14%
+Root Mean Squared Error (RMSE): 1273.7779
+Pearson Correlation Coefficient: 0.9977
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           3.30%
+Muscle                         -3.52%
+Total Adipose Tissue           -14.43%
+IntraMuscular Adipose Tissue   22.15%
+Subcutaneous Adipose Tissue    -16.16%
+Visceral Adipose Tissue        -21.75%
+Perivascular Adipose Tissue    0.00%
+Epicardial Adipose Tissue      0.00%
+
+
+
+##########################################################################################
+Patient ID: 401397918 - Block: 2
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           1766.737212721187              1676.994253018953             
+Muscle                         3372.166654149725              2885.383340442569             
+Total Adipose Tissue           1579.330255073968              1272.359640732879             
+IntraMuscular Adipose Tissue   270.4549791279107              164.7538145240673             
+Subcutaneous Adipose Tissue    847.1459928485197              779.3567051119635             
+Visceral Adipose Tissue        294.9445716220381              167.8433705246497             
+Perivascular Adipose Tissue    120.6925329248515              120.851871914392              
+Epicardial Adipose Tissue      46.09217855064759              39.55387865780656             
+
+
+Patient ID: 401397918 - Block: 2 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 148.8483
+Mean Percentage Error (MPE): 0.26%
+Root Mean Squared Error (RMSE): 215.4090
+Pearson Correlation Coefficient: 0.9968
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           5.35%
+Muscle                         16.87%
+Total Adipose Tissue           24.13%
+IntraMuscular Adipose Tissue   64.16%
+Subcutaneous Adipose Tissue    8.70%
+Visceral Adipose Tissue        75.73%
+Perivascular Adipose Tissue    -0.13%
+Epicardial Adipose Tissue      16.53%
+
+
+
+##########################################################################################
+Patient ID: 401391227 - Block: 2
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           980.9088998886475              954.8907176569178             
+Muscle                         1917.953956104891              1333.41510383869              
+Total Adipose Tissue           4634.310197627318              4025.504816049791             
+IntraMuscular Adipose Tissue   697.4367879449632              419.4929818742729             
+Subcutaneous Adipose Tissue    3084.376288694261              2619.1841325399               
+Visceral Adipose Tissue        651.1295558039709              721.9989784180133             
+Perivascular Adipose Tissue    137.6051674764314              161.1074405772627             
+Epicardial Adipose Tissue      63.76239770769088              103.7212826403409             
+
+
+Patient ID: 401391227 - Block: 2 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 262.1036
+Mean Percentage Error (MPE): 0.26%
+Root Mean Squared Error (RMSE): 355.9906
+Pearson Correlation Coefficient: 0.9934
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           2.72%
+Muscle                         43.84%
+Total Adipose Tissue           15.12%
+IntraMuscular Adipose Tissue   66.26%
+Subcutaneous Adipose Tissue    17.76%
+Visceral Adipose Tissue        -9.82%
+Perivascular Adipose Tissue    -14.59%
+Epicardial Adipose Tissue      -38.53%
+
+
+
+##########################################################################################
+Patient ID: 401398248 - Block: 2
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           1715.203202578604              1779.292584964812             
+Muscle                         4283.212983125675              4820.026038887718             
+Total Adipose Tissue           10139.22062209332              10335.04013825611             
+IntraMuscular Adipose Tissue   1027.037011378937              1035.087681341993             
+Subcutaneous Adipose Tissue    5438.039864116117              5426.934746743394             
+Visceral Adipose Tissue        3372.361101730181              3571.867019939121             
+Perivascular Adipose Tissue    189.9833880882642              212.7013470715681             
+Epicardial Adipose Tissue      111.7992567798183              88.44934316003159             
+
+
+Patient ID: 401398248 - Block: 2 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 132.6814
+Mean Percentage Error (MPE): 0.08%
+Root Mean Squared Error (RMSE): 215.5438
+Pearson Correlation Coefficient: 0.9987
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           -3.60%
+Muscle                         -11.14%
+Total Adipose Tissue           -1.89%
+IntraMuscular Adipose Tissue   -0.78%
+Subcutaneous Adipose Tissue    0.20%
+Visceral Adipose Tissue        -5.59%
+Perivascular Adipose Tissue    -10.68%
+Epicardial Adipose Tissue      26.40%
+
+
+
+##########################################################################################
+Patient ID: 401735368 - Block: 3
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           2088.310511311283              1674.432100390841             
+Muscle                         6831.111211791867              5683.805078986625             
+Total Adipose Tissue           19872.27163423348              19049.12907012651             
+IntraMuscular Adipose Tissue   2678.09809892351               1834.717742192443             
+Subcutaneous Adipose Tissue    14391.24780179351              14793.11888869968             
+Visceral Adipose Tissue        2802.925733516458              2421.292439234385             
+Perivascular Adipose Tissue    0.0                            0.0                           
+Epicardial Adipose Tissue      0.0                            0.0                           
+
+
+Patient ID: 401735368 - Block: 3 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 501.4015
+Mean Percentage Error (MPE): 0.19%
+Root Mean Squared Error (RMSE): 630.8333
+Pearson Correlation Coefficient: 0.9975
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           24.72%
+Muscle                         20.19%
+Total Adipose Tissue           4.32%
+IntraMuscular Adipose Tissue   45.97%
+Subcutaneous Adipose Tissue    -2.72%
+Visceral Adipose Tissue        15.76%
+Perivascular Adipose Tissue    0.00%
+Epicardial Adipose Tissue      0.00%
+
+
+
+##########################################################################################
+Patient ID: 401390765 - Block: 3
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           643.6041424612172              747.0241854273484             
+Muscle                         1675.439282828737              1597.524198945682             
+Total Adipose Tissue           2469.629791319823              2937.276492967743             
+IntraMuscular Adipose Tissue   523.8725289878865              395.1037252882689             
+Subcutaneous Adipose Tissue    1452.845477637811              1847.815318626431             
+Visceral Adipose Tissue        492.9117846941258              694.3574490530431             
+Perivascular Adipose Tissue    0.0                            0.0                           
+Epicardial Adipose Tissue      0.0                            0.0                           
+
+
+Patient ID: 401390765 - Block: 3 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 171.7708
+Mean Percentage Error (MPE): 0.20%
+Root Mean Squared Error (RMSE): 236.8076
+Pearson Correlation Coefficient: 0.9859
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           -13.84%
+Muscle                         4.88%
+Total Adipose Tissue           -15.92%
+IntraMuscular Adipose Tissue   32.59%
+Subcutaneous Adipose Tissue    -21.37%
+Visceral Adipose Tissue        -29.01%
+Perivascular Adipose Tissue    0.00%
+Epicardial Adipose Tissue      0.00%
+
+
+
+##########################################################################################
+Patient ID: 401741594 - Block: 3
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           1509.385839987355              1700.044393285536             
+Muscle                         4078.059983100985              4494.401960127029             
+Total Adipose Tissue           3503.683435719973              3644.398668110139             
+IntraMuscular Adipose Tissue   303.7163180292862              212.7229523582855             
+Subcutaneous Adipose Tissue    1223.98810443355               1861.209029553682             
+Visceral Adipose Tissue        1975.889891449428              1569.105553134977             
+Perivascular Adipose Tissue    0.08912180770910941            1.361133063193671             
+Epicardial Adipose Tissue      0.0                            0.0                           
+
+
+Patient ID: 401741594 - Block: 3 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 235.4983
+Mean Percentage Error (MPE): 0.32%
+Root Mean Squared Error (RMSE): 318.0600
+Pearson Correlation Coefficient: 0.9833
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           -11.21%
+Muscle                         -9.26%
+Total Adipose Tissue           -3.86%
+IntraMuscular Adipose Tissue   42.78%
+Subcutaneous Adipose Tissue    -34.24%
+Visceral Adipose Tissue        25.92%
+Perivascular Adipose Tissue    -93.45%
+Epicardial Adipose Tissue      0.00%
+
+
+
+##########################################################################################
+Patient ID: 401413899 - Block: 2
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           1926.516409978582              2307.809210627388             
+Muscle                         3809.519772508401              3777.335997282054             
+Total Adipose Tissue           5055.847743407701              6027.356467262183             
+IntraMuscular Adipose Tissue   967.201169815209               787.3128519456312             
+Subcutaneous Adipose Tissue    2899.607721085111              3993.24302877031              
+Visceral Adipose Tissue        841.6501480397912              854.9022907800518             
+Perivascular Adipose Tissue    242.9514491367116              296.3759218670631             
+Epicardial Adipose Tissue      104.4372553308779              95.52237389912726             
+
+
+Patient ID: 401413899 - Block: 2 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 341.7626
+Mean Percentage Error (MPE): 0.14%
+Root Mean Squared Error (RMSE): 538.7203
+Pearson Correlation Coefficient: 0.9851
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           -16.52%
+Muscle                         0.85%
+Total Adipose Tissue           -16.12%
+IntraMuscular Adipose Tissue   22.85%
+Subcutaneous Adipose Tissue    -27.39%
+Visceral Adipose Tissue        -1.55%
+Perivascular Adipose Tissue    -18.03%
+Epicardial Adipose Tissue      9.33%
+
+
+
+##########################################################################################
+Patient ID: 401378138 - Block: 3
+Total (mL)                     sCT                            Real CT                       
+==========================================================================================
+Bone                           1427.061592930467              1287.035351035388             
+Muscle                         3607.651916846214              3585.365759467192             
+Total Adipose Tissue           4662.777346840122              4953.289541540333             
+IntraMuscular Adipose Tissue   572.9634388590746              403.3989733540027             
+Subcutaneous Adipose Tissue    2275.257680792346              2903.030004820104             
+Visceral Adipose Tissue        1814.556227188702              1646.860563366226             
+Perivascular Adipose Tissue    0.0                            0.0                           
+Epicardial Adipose Tissue      0.0                            0.0                           
+
+
+Patient ID: 401378138 - Block: 3 (Statistics)
+==========================================================================================
+Statistic                      Value
+==========================================================================================
+Mean Absolute Error (MAE): 177.2321
+Mean Percentage Error (MPE): 0.15%
+Root Mean Squared Error (RMSE): 263.5037
+Pearson Correlation Coefficient: 0.9904
+
+Tissue Type                    Relative Error (%)
+==========================================================================================
+Bone                           10.88%
+Muscle                         0.62%
+Total Adipose Tissue           -5.87%
+IntraMuscular Adipose Tissue   42.03%
+Subcutaneous Adipose Tissue    -21.62%
+Visceral Adipose Tissue        10.18%
+Perivascular Adipose Tissue    0.00%
+Epicardial Adipose Tissue      0.00%
+
+
