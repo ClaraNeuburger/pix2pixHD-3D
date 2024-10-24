@@ -148,7 +148,6 @@ def parse_volume_data(volume_data_path):
             tissue_type, volume = line.split(": ")
             volume_data[(current_patient_id, current_mr)][tissue_type.strip()] = float(volume.strip())
 
-    # print("Parsed Volume Data:", volume_data)
 
     return volume_data
 
@@ -175,12 +174,10 @@ def get_volumes_for_patient(volume_data, patient_id, mr_number):
 #######################################################################################################################
 
 opt = TrainOptions().parse()
-#title = input("What is the name of the model ou want to evaluate ? ")
 plot = input('Do you want to create Bland Altman plots ? (yes/no) ')
 title = opt.name
 
 folder1 = f'../checkpoints/{title}/TotalSegmentator_Results/TotalSegmentator_sCT_{title}'
-#folder2 = '/home/radiology/Clara_intern/DataBaseWB_NII_Pix2Pix/CT_BOA_results/'
 
 output_file = f'../checkpoints/{title}/TotalSegmentator_Results/comparison_TotalSegmentator_{title}.txt'
 
@@ -259,7 +256,6 @@ for root, dirs, files in os.walk(folder1):
         cumulative_stats_MR["relative_errors"] += stats_MR["relative_errors"]
 
         patient_count += 1
-        # print(f"Comparison and statistics appended for Patient {patient_id}, Instance {instance_number}")
 
 
 mean_relative_errors_sCT = cumulative_stats_sCT["relative_errors"] / patient_count if patient_count > 0 else np.zeros(
