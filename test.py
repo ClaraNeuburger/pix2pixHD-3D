@@ -1,7 +1,4 @@
-from torch.nn.functional import grid_sample
-
 from models.pix2pixHD_model import Pix2PixHDModel
-import re
 import torch
 import torchio as tio
 import glob
@@ -11,6 +8,7 @@ import numpy as np
 import os
 import shutil
 from datetime import datetime
+
 
 # Function that will un-normalize the nii image back into HU
 def normalize_hounsfield_units(nii_image):
@@ -27,59 +25,126 @@ def normalize_hounsfield_units(nii_image):
     return hu_image
 
 
-# Function to recover the list of testing subjects (saved in a .txt file)
-def get_subjects(path, transform=None, test_images=None):
-    ct_dir = os.path.join(path, 'CT')
-    mri_dir = os.path.join(path, 'MR')
+# Helper functions to combine the 2 MRI dixon types
+class MySubject(tio.Subject):
+    def check_consistent_attribute(self, *args, **kwargs) -> None:
+        kwargs['relative_tolerance'] = 1e-2
+        kwargs['absolute_tolerance'] = 1e-2
+        return super().check_consistent_attribute(*args, **kwargs)
 
-    ct_paths = sorted(glob.glob(ct_dir + '/*.nii.gz'))
-    mri_paths = sorted(glob.glob(mri_dir + '/*.nii.gz'))
+# Used when you have 2 channels of MRI to normalize them independently
+def load_and_transform_image(image_path, transform=None):
+    image = tio.ScalarImage(image_path)
+    if transform:
+        image = transform(image)
+    return image
 
-    assert len(ct_paths) == len(mri_paths)
-    subjects = []
-    for (ct_path, mr_path) in zip(ct_paths, mri_paths):
-        subject = tio.Subject(
-            ct=tio.ScalarImage(ct_path),
-            mri=tio.ScalarImage(mr_path),
-        )
-        subjects.append(subject)
-
-    if test_images:
-        subjects = [subject for subject in subjects if os.path.basename(subject.mri.path) in test_images]
-
-    return tio.SubjectsDataset(subjects, transform=transform)
+# Combine the 3 MRI sequences into an image with 2 channels
+def combine_mri_channels(mri_0, mri_1):
+    combined_data = np.stack((mri_0.data.squeeze(), mri_1.data.squeeze()), axis=0)
+    combined_mri = tio.ScalarImage(tensor=combined_data,
+                                   spatial_shape=mri_0.shape[1:],
+                                   affine=mri_0.affine)
+    return combined_mri
 
 
-# def recover_mri_names(txt_file_path):
-#     test_image = []
-#     with open(txt_file_path, 'r') as file:
-#         lines = file.readlines()
-#         for line in lines:
-#             match = re.search(r'(\d+_MR_\d+\.nii\.gz)', line)
-#             if match:
-#                 test_image.append(match.group(1))
-#     return test_image
 
-def recover_mri_names(txt_file_path):
-    test_image = []
-    with open(txt_file_path, 'r') as file:
-        lines = file.readlines()
-        for line in lines:
-            match = re.search(r'(\d+_MR_\d+\.nii\.gz)', line)
-            if match:
-                test_image.append(match.group(1))
-            else:
-                match_path = re.search(r'\/[a-zA-Z0-9_/]+(\d+_MR_\d+\.nii\.gz)', line)
-                if match_path:
-                    test_image.append(match_path.group(1))
-    return test_image
+# Loading the subjects from the given path
+def get_subjects(path, nb_channels, test_subjects, transform=None):
+
+    ### If the MRI image only has one channel, simply load the images
+    if nb_channels == 1:
+        ct_dir = os.path.join(path, 'CT')
+        mri_dir = os.path.join(path, 'MR')
+
+        ct_paths = sorted(glob.glob(ct_dir + '/*.nii.gz'))
+        mri_paths = sorted(glob.glob(mri_dir + '/*.nii.gz'))
+
+        assert len(ct_paths) == len(mri_paths)
+
+        testing_subjects = []
+        ct_paths_check = []
+
+        for subject in test_subjects:
+            ct_path_check = subject[0]
+            ct_paths_check.append(ct_path_check)
+
+        for (ct_path, mri_path) in zip(ct_paths, mri_paths):
+            subject = MySubject(
+                ct= tio.ScalarImage(ct_path),
+                mri= tio.ScalarImage(mri_path),
+            )
+            if ct_path in ct_paths_check:
+                testing_subjects.append(subject)
+
+
+    ### If the MRI image has 2 channels aka if you use the fat and water sequence from the dixon
+    if nb_channels == 2:
+        ct_dir = os.path.join(path, 'CT')
+        mri_W_dir = os.path.join(path, 'MR water')
+        mri_F_dir = os.path.join(path, 'MR fat resized')
+
+        ct_paths = sorted(glob.glob(ct_dir + '/*.nii.gz'))
+        mri_W_paths = sorted(glob.glob(mri_W_dir + '/*.nii.gz'))
+        mri_F_paths = sorted(glob.glob(mri_F_dir + '/*.nii.gz'))
+        assert len(ct_paths) == len(mri_W_paths)
+
+        testing_subjects = []
+        ct_paths_check= []
+
+        for subject in test_subjects:
+            ct_path_check = subject[0]
+            ct_paths_check.append(ct_path_check)
+
+        for (ct_path, mri_W_path, mri_F_path) in zip(ct_paths, mri_W_paths, mri_F_paths):
+            ct_image = load_and_transform_image(ct_path,transform=None)
+
+            transform_mri =tio.RescaleIntensity(out_min_max=(0, 1), in_min_max=(0, 1000))
+            mri_W_image = load_and_transform_image(mri_W_path,transform=transform_mri)
+            mri_F_image = load_and_transform_image(mri_F_path,transform=transform_mri)
+            combined_mri = combine_mri_channels(mri_W_image,mri_F_image)
+
+            subject = MySubject(
+                ct=ct_image,
+                mri=combined_mri,
+            )
+            if ct_path in ct_paths_check:
+                testing_subjects.append(subject)
+
+    return testing_subjects
+
+
+def load_test_subject_1(test_file_path,path):
+    test_subjects = set()
+    with open(test_file_path, 'r') as f:
+        for line in f:
+            patient_id, scan_number = line.strip().split("_")
+            ct_path = os.path.join(path,f"CT/{patient_id}_CT_{scan_number}.nii.gz")
+            mr_path = os.path.join(path,f"MR/{patient_id}_MR.nii.gz")
+            test_subjects.add((ct_path, mr_path))
+    return test_subjects
+
+def load_test_subject_2(test_file_path,path):
+    test_subjects = set()
+    with open(test_file_path, 'r') as f:
+        for line in f:
+            patient_id, scan_number = line.strip().split("_")
+            ct_path = os.path.join(path,f"CT/{patient_id}_CT_{scan_number}.nii.gz")
+            mr_W_path = os.path.join(path,f"MR water/{patient_id}_MR_{scan_number}.nii.gz")
+            mr_F_path = os.path.join(path, f"MR fat resized/{patient_id}_MR_{scan_number}.nii.gz")
+            test_subjects.add((ct_path, mr_W_path, mr_F_path))
+    return test_subjects
+
 
 
 # Recreate the dataset for testing using only the testing images
 class Dataset:
-    def __init__(self, path, test_images=None, batch_size=1):
+    def __init__(self, path,patch_size,nb_channels, test_images, batch_size=1):
         self.path = path
         self.batch_size = batch_size
+        self.patch_size = patch_size
+        self.test_images = test_images
+        self.nb_channels = nb_channels
 
         validation_transform = tio.Compose([
             tio.ToCanonical(),
@@ -88,12 +153,12 @@ class Dataset:
             tio.RescaleIntensity(out_min_max=(0, 1), in_min_max=(0, 1000), exclude=['ct']),
         ])
 
-        self.subjects = get_subjects(self.path, transform=None, test_images=test_images)
+        self.subjects = get_subjects(self.path, self.nb_channels, self.test_images, transform=None)
 
         self.test_set = tio.SubjectsDataset(self.subjects, transform=validation_transform)
 
     def get_subject_loader(self,subject):
-        grid_sampler = tio.inference.GridSampler(subject,patch_size=(96, 96, 44),patch_overlap=16)
+        grid_sampler = tio.inference.GridSampler(subject,patch_size=self.patch_size,patch_overlap=16)
         patch_loader = torch.utils.data.DataLoader(grid_sampler,batch_size=self.batch_size)
         aggregator = tio.inference.GridAggregator(grid_sampler, overlap_mode='hann')
 
@@ -126,18 +191,17 @@ def run_inference(model, patch_loader, aggregator, output_dir,sub):
             mri = patches_batch['mri'][tio.DATA].to(device).float()
             ct = patches_batch['ct'][tio.DATA].to(device)
 
-            mri_filename = os.path.basename(patches_batch['mri']['path'][0])
+            mri_filename = os.path.basename(patches_batch['ct']['path'][0])
             patient_number = mri_filename.split('_')[0]
             mri_number = mri_filename.split('_')[2].split('.')[0]
 
             locations = patches_batch[tio.LOCATION]
 
-            output_patches = model.inference(mri, mri)  # predicted patch image
+            output_patches = model.inference(mri, mri)
 
-            # Add the batch's predicted patches to the aggregator
             aggregator.add_batch(output_patches, locations)
 
-    # Get the final output tensor (reconstructed full 3D image)
+    # final output tensor (reconstructed full 3D image)
     output_tensor = aggregator.get_output_tensor()
     output_tensor = output_tensor.cpu().numpy().squeeze()
     spacing = sub.ct.spacing
@@ -208,39 +272,51 @@ def organize_images_with_parent(source_folder, destination_folder):
 #######################################################################################################################
 # Where you must change the paths for your database, model
 
-# path to the database
-path = '/home/radiology/Clara_intern/DataBaseWB_NII_Pix2Pix'
+opt = TrainOptions().parse()
+epoch = input('Which model epoch do you want to evaluate ?')
+title = opt.name
 
-# path to the list (text file) of patients in the testing set
-path_test = '/home/radiology/Clara_intern/pix2pixHD 3D + git/checkpoints/test_subjects_20241007-163138.txt'
-test_images = recover_mri_names(path_test)
+# paths for testing
+path = opt.dataroot
+path_test = f"./checkpoints/{title}/test_subjects_{title}.txt"
+
+
+if opt.input_nc==1:
+    test_images = load_test_subject_1(path_test,path)
+else:
+    test_images = load_test_subject_2(path_test,path)
+print(test_images)
 
 print(torch.cuda.is_available())
 device = torch.device('cuda') if torch.cuda.is_available() else 'cpu'
 
 # Change to your chosen saved model
-model_path_G = '/home/radiology/Clara_intern/pix2pixHD 3D + git/checkpoints/mr2ctHD/Training 3D big patch/200_net_G.pth'
-model_path_D = '/home/radiology/Clara_intern/pix2pixHD 3D + git/checkpoints/mr2ctHD/Training 3D big patch/200_net_D.pth'
-opt = TrainOptions().parse()
+model_path_G = f'./checkpoints/{title}/{epoch}_net_G.pth'
+model_path_D = f'./checkpoints/{title}/{epoch}_net_D.pth'
+
+
 model = load_model(model_path_G,model_path_D, opt)
 model.to(device)
 
-# Epoch of chosen model (for the name of your sCT)
-epoch = 200
-
 # Create the testing set
-dataset = Dataset(path, test_images=test_images, batch_size=1)
-for i in range(len(test_images)-1):
+dataset = Dataset(path, opt.patch_size, opt.input_nc, test_images=test_images, batch_size=1)
+
+ct_paths_check = []
+for subject in test_images:
+    ct_path_check = subject[0]
+    ct_paths_check.append(ct_path_check)
+
+for i in range(len(ct_paths_check)):
     sub = dataset.subjects[i]
     patch_loader, aggregator = dataset.get_subject_loader(sub)
 
     # Where you want to save the sCT
-    output_directory = '/home/radiology/Clara_intern/pix2pixHD 3D + git/testing_results/Results 3D big patch'
-
+    output_directory = f'./checkpoints/{title}/Results_{title}'
     run_inference(model, patch_loader, aggregator, output_directory, sub)
 
+
 # Folder which will be used by BOA (necessary because it requires a specific folder structure)
-destination_folder = '/home/radiology/Documents/Body-and-Organ-Analysis/data'
-organize_images_with_parent(output_directory, destination_folder)
+# destination_folder = '/home/radiology/Documents/Body-and-Organ-Analysis/data'
+# organize_images_with_parent(output_directory, destination_folder)
 
 #######################################################################################################################

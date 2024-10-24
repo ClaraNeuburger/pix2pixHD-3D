@@ -13,7 +13,7 @@ class BaseOptions:
 
     def initialize(self):
         # experiment specifics
-        self.parser.add_argument('--name', type=str, default='mr2ctHD', help='name of the experiment. It decides where to store samples and models')
+        self.parser.add_argument('--name', type=str, default='dixon_patch_144_epoch_400', help='name of the experiment. It decides where to store samples and models')
         self.parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
         self.parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints', help='models are saved here')
         self.parser.add_argument('--model', type=str, default='pix2pixHD', help='which model to use')
@@ -21,17 +21,22 @@ class BaseOptions:
         self.parser.add_argument('--use_dropout', action='store_true', help='use dropout for the generator')
         self.parser.add_argument('--data_type', default=16, type=int, choices=[8, 16, 32], help="Supported data type i.e. 8, 16, 32 bit")
         self.parser.add_argument('--verbose', action='store_true', default=False, help='toggles verbose')
+        self.parser.add_argument('--plot_dataset', action='store_true', default=True, help='print one image of the dataset before training')
+
 
         # input/output sizes
         self.parser.add_argument('--batchSize', type=int, default=1, help='input batch size')
         self.parser.add_argument('--loadSize', type=int, default=512, help='scale images to this size')
         self.parser.add_argument('--fineSize', type=int, default=256, help='then crop to this size')
         self.parser.add_argument('--label_nc', type=int, default=0, help='# of input label channels')
-        self.parser.add_argument('--input_nc', type=int, default=1, help='# of input image channels')
+        self.parser.add_argument('--input_nc', type=int, default=2, help='# of input image channels')
         self.parser.add_argument('--output_nc', type=int, default=1, help='# of output image channels')
 
         # for setting inputs
-        self.parser.add_argument('--dataroot', type=str, default='/home/radiology/Clara_intern/DataBaseWB_NII_Pix2Pix/')
+        self.parser.add_argument('--dataroot', type=str, default='/home/radiology/Clara_intern/DataBaseWB_NII_Pix2Pix_dixon')
+        self.parser.add_argument('--testing_dataroot', type=str, default='/home/radiology/Clara_intern/pix2pixHD 3D (copy)/checkpoints/dixon_patch_144/test_subjects_dixon_patch_144.txt')
+        self.parser.add_argument('--use_test_list', action='store_true',default =True,help='If true,use a list of patient for the testing set')
+
         self.parser.add_argument('--resize_or_crop', type=str, default='scale_width', help='scaling and cropping of images at load time [resize_and_crop|crop|scale_width|scale_width_and_crop]')
         self.parser.add_argument('--serial_batches', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
         self.parser.add_argument('--no_flip', action='store_true', help='if specified, do not flip the images for data argumentation')

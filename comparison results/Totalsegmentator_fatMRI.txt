@@ -1,5 +1,0 @@
-Patient: 401413899, MR: 3
-Volume skeletal_muscle: 3840.4583523864744
-Volume adipose tissue: 5270.917308303833
-Volume torso fat: 2821.7907395324705
-######################################################

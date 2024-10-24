@@ -1,17 +1,16 @@
 import os
 import time
 from datetime import datetime
-import random
-
 import torch
 import torchio as tio
-
 from dataloader import Dataset
+from dataloader_test_list import Dataset_testlist
 from models.pix2pixHD_model import Pix2PixHDModel
 from options.train_options import TrainOptions
 from torch.utils.tensorboard import SummaryWriter
-
 from util.util import print_log, format_train_log
+
+
 
 
 def run_inference(model, patch_loader, aggregator1, aggregator2, step_visu, i):
@@ -22,7 +21,7 @@ def run_inference(model, patch_loader, aggregator1, aggregator2, step_visu, i):
 
             locations = patches_batch[tio.LOCATION]
 
-            output_patches = model.inference(mri, mri)  # predicted patch image
+            output_patches = model.inference(mri, mri)
 
             # Add the batch's predicted patches to the aggregator
             aggregator1.add_batch(output_patches, locations)
@@ -33,13 +32,12 @@ def run_inference(model, patch_loader, aggregator1, aggregator2, step_visu, i):
 
     output_tensor = output_tensor.squeeze()
     ct_tensor = ct_tensor.squeeze()
-
-    middle_slice_index = output_tensor.shape[1] // 2
+    middle_slice_index = output_tensor.shape[2] // 2
     middle_slice_sCT = output_tensor[:, :, middle_slice_index]
 
     middle_slice_CT = ct_tensor[:,:,middle_slice_index]
 
-    # windowing and normalisation
+    # windowing and normalisation (just for visualisation of the TC in tensorboard)
     window_width = 400
     window_level = 40
 
@@ -60,20 +58,25 @@ def run_inference(model, patch_loader, aggregator1, aggregator2, step_visu, i):
 
 
 
-
-time_now = datetime.now().strftime("%Y%m%d-%H%M%S")
-
 opt = TrainOptions().parse()
 iter_path = os.path.join(opt.checkpoints_dir, opt.name, 'iter.txt')
 out_f = open(f"{os.path.join(opt.checkpoints_dir, opt.name)}/results.txt", 'w')
 
+title = opt.name
+
 if not os.path.exists(os.path.join(opt.checkpoints_dir, opt.name, 'TensorBoard')):
-    os.makedirs(os.path.join(opt.checkpoints_dir, opt.name, 'TensorBoard', time_now))
+    os.makedirs(os.path.join(opt.checkpoints_dir, opt.name, 'TensorBoard', title))
 
 start_epoch, epoch_iter = 1, 0
 
-dataset = Dataset(opt.dataroot,test_file_path='/home/radiology/Clara_intern/pix2pixHD 3D + git/checkpoints/test_subjects_20241004-165904.txt')
+
+
+if opt.use_test_list==True:
+    dataset = Dataset_testlist(opt.dataroot,opt.input_nc, opt.plot_dataset,title,opt.testing_dataroot,opt.patch_size,opt.patch_overlap)
+else:
+    dataset = Dataset(opt.dataroot,opt.input_nc, opt.plot_dataset,title,opt.patch_size,opt.patch_overlap)
 training_loader, validation_loader = dataset.get_loaders()
+
 
 print('Dataset size:', len(training_loader), 'subjects')
 dataset_size = len(training_loader)
@@ -83,7 +86,7 @@ print('#training images = %d' % dataset_size)
 model = Pix2PixHDModel()
 model.initialize(opt)
 
-tensorboard_writer = SummaryWriter(os.path.join(opt.checkpoints_dir, opt.name, 'TensorBoard', time_now))
+tensorboard_writer = SummaryWriter(os.path.join(opt.checkpoints_dir, opt.name, 'TensorBoard', title))
 
 total_steps = 0
 print_start_time = time.time()
@@ -98,13 +101,11 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
     epoch_start_time = time.time()
     epoch_iter = 0
 
+
     for data in training_loader:
         torch.cuda.empty_cache()
         mri = data['mri'][tio.DATA].to(device)
         ct = data['ct'][tio.DATA].to(device)
-        # print(mri.shape)
-        # print(ct.shape)
-
 
         iter_start_time = time.time()
         total_steps += opt.batchSize
@@ -145,13 +146,24 @@ for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
             tensorboard_writer.add_scalars('Loss', errors, total_steps)
             print_start_time = time.time()
 
-        # if total_steps % opt.display_freq == 0:
-        #     for i in range(15):
-        #         sub = dataset.subjects[i]
-        #         patch_loader, aggregator1, aggregator2 = dataset.get_val_subject(sub)
-        #
-        #         run_inference(model, patch_loader, aggregator1, aggregator2,step_visu,i)
-        #     step_visu += 1
+        ### display validation images in tensorboard
+        if opt.use_test_list==False:
+            if total_steps % opt.display_freq == 0:
+                for i in range(0,7):
+                    sub = dataset.subjects[i]
+                    patch_loader, aggregator1, aggregator2 = dataset.get_val_subject(sub)
+
+                    run_inference(model, patch_loader, aggregator1, aggregator2,step_visu,i+1)
+                step_visu += 1
+
+        if opt.use_test_list == True:
+            if total_steps % opt.display_freq == 0:
+                for i in range(0, 7):
+                    sub = dataset.test_subjects[i]
+                    patch_loader, aggregator1, aggregator2 = dataset.get_val_subject(sub)
+
+                    run_inference(model, patch_loader, aggregator1, aggregator2, step_visu, i+1)
+                step_visu += 1
 
 
 
