@@ -13,5 +13,7 @@ It is possible to compute comparisons using the totalsegmentator tool, using the
 - thirdly use 'Run_comparison_TotalSegmentator' to create a final report that compares the results of the segmentation for the sCT and the MRI (compared to the real CT)
 
 While training, you can visualize the results by executing the command : 
+
 tensorboard --logdir "checkpoints/name_of_your_model/Tensorboard/name_of_your_model"
+
 It is possible to change the frequency for prints and validation in the options. 
