@@ -17,3 +17,6 @@ While training, you can visualize the results by executing the command :
 tensorboard --logdir "checkpoints/name_of_your_model/Tensorboard/name_of_your_model"
 
 It is possible to change the frequency for prints and validation in the options. 
+
+For a more in-depth explanation of the methodology, implementation details, and usage instructions, please visit the following link:
+https://jazzy-toffee-659735.netlify.app/
